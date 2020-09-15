@@ -11,7 +11,7 @@ const Todo = (props) => {
       <div className="btn-group">
         {todo.isCompleted ? (
           <button
-            className="btn btn-light btn-sm btn-dark"
+            className="btn btn-outline-light btn-sm btn-dark"
             type="button"
             onClick={() => toggleCompleteTodo(todo)}
           >

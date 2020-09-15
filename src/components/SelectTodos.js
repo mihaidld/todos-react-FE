@@ -1,17 +1,20 @@
-import React from "react"
+import React, { useContext } from "react";
+import { ModeContext } from "./../context/ModeContext";
 
 const SelectTodos = (props) => {
-  const { filter, setFilter } = props
+  const { mode } = useContext(ModeContext);
+  const modeClass = mode === "dark" ? "bg-dark text-white" : "";
+  const { filter, setFilter } = props;
   const handleSelectChange = (event) => {
-    setFilter(event.target.value)
-  }
+    setFilter(event.target.value);
+  };
   return (
     <div className="input-group mb-3">
       <label className="input-group-text" htmlFor="select">
         Filtrer les tâches
       </label>
       <select
-        className="form-select"
+        className={`form-select ${modeClass}`}
         id="select"
         value={filter}
         onChange={handleSelectChange}
@@ -24,7 +27,7 @@ const SelectTodos = (props) => {
         <option value="notcompleted">pas Terminées 🌪</option>
       </select>
     </div>
-  )
-}
+  );
+};
 
-export default SelectTodos
+export default SelectTodos;
