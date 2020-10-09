@@ -2,55 +2,55 @@ import React, { useState, useEffect } from "react";
 import TodosList from "./TodosList";
 import SelectTodos from "./SelectTodos";
 import AddTodoForm from "./AddTodoForm";
-import { v4 as uuidv4 } from "uuid";
 
 const initialTodos = [
   {
-    text: "Faires des courses",
-    isCompleted: true,
-    id: "1b688c51-e990-4ce3-95a5-9018cf81d23d",
+    task: "Faires des courses",
+    done: true,
+    id: 1,
   },
   {
-    text: "Réviser ES6 classes",
-    isCompleted: false,
-    id: "efc6331d-7ca2-49a6-b014-378b8280b33d",
+    task: "Réviser ES6 classes",
+    done: false,
+    id: 2,
   },
   {
-    text: "Aroser les plantes",
-    isCompleted: false,
-    id: "9e60d353-cd72-40bb-97e6-5841e51635c0",
+    task: "Aroser les plantes",
+    done: false,
+    id: 3,
   },
 ];
 
 const Todos = () => {
-  const [todos, setTodos] = useState(
-    () => JSON.parse(localStorage.getItem("todo-list")) || initialTodos
-  );
+  const [todos, setTodos] = useState(initialTodos);
   const [filter, setFilter] = useState("all");
 
-  const addTodo = (text) => {
-    const newTodo = {
-      text,
-      isCompleted: false,
-      id: uuidv4(),
-    };
-    setTodos([...todos, newTodo]);
-  };
-
-  const deleteTodo = (task) => {
-    setTodos(todos.filter((el) => el.id !== task.id));
-  };
-
-  const toggleCompleteTodo = (task) => {
-    setTodos(
-      todos.map((el) => {
-        if (el.id === task.id) {
-          el.isCompleted = !el.isCompleted;
+  /* useEffect(() => {
+    const API_KEY = "202c3b60-0977-11eb-8cd1-f3248197ab0d";
+    const IP = "172.18.246.84";
+    const PORT = 7777;
+    const URL = `http://${IP}:${PORT}`;
+    fetch(`${URL}/filter/${filter}`, {
+      method: "GET",
+      headers: {
+        authorization: API_KEY,
+      },
+    })
+      .then((response) => {
+        console.log("objet headers : ", response);
+        if (response.ok) {
+          return response.data.json();
         }
-        return el;
+        throw new Error("HTTP request problem");
       })
-    );
-  };
+      .then((data) => {
+        console.log("body format JSON : ", data);
+        setTodos(data);
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  }, [filter, todos]); */
 
   useEffect(() => {
     document.title = todos.length
@@ -58,33 +58,25 @@ const Todos = () => {
       : "Que devez vous faire aujourd'hui ?";
   }, [todos.length]);
 
-  useEffect(() => {
-    localStorage.setItem("todo-list", JSON.stringify(todos));
-  }, [todos]);
-
   const filteredTodos = todos.filter((el) => {
-    if (filter === "completed") {
-      return el.isCompleted;
+    if (filter === "done") {
+      return el.done === true;
     }
-    if (filter === "notcompleted") {
-      return !el.isCompleted;
+    if (filter === "undone") {
+      return el.done === false;
     }
     return true;
   });
+  const completedCount = todos.filter((el) => el.done === true).length;
 
-  const completedCount = todos.filter((el) => el.isCompleted).length;
   return (
     <main>
       <h2 className="mb-3">
         Ma liste de tâches ({completedCount} / {todos.length})
       </h2>
       <SelectTodos filter={filter} setFilter={setFilter} />
-      <TodosList
-        todos={filteredTodos}
-        deleteTodo={deleteTodo}
-        toggleCompleteTodo={toggleCompleteTodo}
-      />
-      <AddTodoForm addTodo={addTodo} setFilter={setFilter} />
+      <TodosList todos={filteredTodos} setTodos={setTodos} />
+      <AddTodoForm setFilter={setFilter} setTodos={setTodos} />
     </main>
   );
 };

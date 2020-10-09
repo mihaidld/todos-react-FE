@@ -2,15 +2,38 @@ import React, { useContext } from "react";
 import { ModeContext } from "./../context/ModeContext";
 
 const AddTodoForm = (props) => {
-  const { mode } = useContext(ModeContext);
+  const { mode, API_KEY, URL } = useContext(ModeContext);
   const modeClass = mode === "dark" ? "bg-dark text-white" : "";
-  const { addTodo, setFilter } = props;
+  const { setTodos, setFilter } = props;
   const handleFormSubmit = (event) => {
     event.preventDefault();
     const newTodoText = event.target.elements.todo.value;
-    addTodo(newTodoText);
+    fetch(`${URL}/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: API_KEY,
+      },
+      body: JSON.stringify({ task: newTodoText }),
+    })
+      .then((response) => {
+        console.log(response);
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        console.log(data.valid);
+        if (data.valid) {
+          console.log(data.data);
+          setTodos(data.data);
+        } else {
+          alert("Your credentials are not correct, try again");
+        }
+      })
+      .catch((error) => console.log(error));
+
     event.target.reset();
-    setFilter((filter) => (filter === "completed" ? "all" : filter));
+    setFilter((filter) => (filter === "done" ? "all" : filter));
   };
   return (
     <form onSubmit={handleFormSubmit}>

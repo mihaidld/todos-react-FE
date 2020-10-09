@@ -1,19 +1,94 @@
-import React from "react"
+import React, { useContext } from "react";
+import { ModeContext } from "./../context/ModeContext";
 
 const Todo = (props) => {
-  const { todo, deleteTodo, toggleCompleteTodo } = props
+  const { todo, setTodos } = props;
+  const { API_KEY, URL } = useContext(ModeContext);
   const style = {
-    textDecoration: todo.isCompleted ? "line-through" : "none",
-  }
+    textDecoration: todo.done ? "line-through" : "none",
+  };
+  const idTodo = todo.id;
+  const setUndoneTodo = (idTodo) => {
+    fetch(`${URL}/undone/${idTodo}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: API_KEY,
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        console.log(data.valid);
+        if (data.valid) {
+          console.log(data.data);
+          setTodos(data.data);
+        } else {
+          alert("Your credentials are not correct, try again");
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+  const setDoneTodo = (idTodo) => {
+    fetch(`${URL}/done/${idTodo}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: API_KEY,
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        console.log(data.valid);
+        if (data.valid) {
+          console.log(data.data);
+          setTodos(data.data);
+        } else {
+          alert("Your credentials are not correct, try again");
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+  const deleteTodo = (idTodo) => {
+    fetch(`${URL}/delete/${idTodo}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: API_KEY,
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        console.log(data.valid);
+        if (data.valid) {
+          console.log(data.data);
+          setTodos(data.data);
+        } else {
+          alert("Your credentials are not correct, try again");
+        }
+      })
+      .catch((error) => console.log(error));
+  };
   return (
     <div className="shadow-sm border p-2 d-flex align-items-center justify-content-between mb-2">
-      <span style={style}>{todo.text}</span>
+      <span style={style}>{todo.task}</span>
       <div className="btn-group">
-        {todo.isCompleted ? (
+        {todo.done ? (
           <button
             className="btn btn-outline-light btn-sm btn-dark"
             type="button"
-            onClick={() => toggleCompleteTodo(todo)}
+            onClick={() => setUndoneTodo(idTodo)}
           >
             Rétablir
           </button>
@@ -21,7 +96,7 @@ const Todo = (props) => {
           <button
             className="btn btn-light btn-sm"
             type="button"
-            onClick={() => toggleCompleteTodo(todo)}
+            onClick={() => setDoneTodo(idTodo)}
           >
             Terminer
           </button>
@@ -29,13 +104,13 @@ const Todo = (props) => {
         <button
           className="btn btn-danger btn-sm"
           type="button"
-          onClick={() => deleteTodo(todo)}
+          onClick={() => deleteTodo(idTodo)}
         >
           Supprimer
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Todo
+export default Todo;

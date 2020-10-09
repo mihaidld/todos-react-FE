@@ -22,9 +22,9 @@ const SelectTodos = (props) => {
         {/* eslint-disable-next-line */}
         <option value="all">Toutes 🌈</option>
         {/* eslint-disable-next-line */}
-        <option value="completed">Terminées 💪</option>
+        <option value="done">Terminées 💪</option>
         {/* eslint-disable-next-line */}
-        <option value="notcompleted">pas Terminées 🌪</option>
+        <option value="undone">pas Terminées 🌪</option>
       </select>
     </div>
   );
