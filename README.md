@@ -1,30 +1,13 @@
-# Todos App - localStorage et compagnie
+# todos-react-FE
 
-## document.title
+_to be used with todos-express-BE https://github.com/mihaidld/todos-express-BE for back-end side_
 
-Pourquoi pas s'amuser avec le titre du document dynamique ?
+## 1. Update `local IP` and `PORT` in ModeContext.js
 
-par exemple :
+## 2. Start development server via terminal command line
 
-- Que devez vous faire aujourd'hui ? (si pas de todos dans la liste)
-- Vous avez ... tâches à accomplir ! (dans le cas contraire)
-
-## localStorage - tâches
-
-Assurez vous que vos tâches soient enregistrées dans `localStorage` 💪
-
-## Mode dark
-
-Mettez en place _mode dark_ en option, inspirez vous du projet shopping liste
-
-```html
-<!-- bootstrap5 markup pour un switch -->
-<div class="form-check form-switch">
-  <input class="form-check-input" type="checkbox" id="activate" />
-  <label class="form-check-label" for="activate"> Mode Sombre </label>
-</div>
+```bash
+yarn start
 ```
 
-## Mode - localStorage
-
-Enregistrer la dernière préférence de l'utilisateur dans `localStorage`
+## 3. Enter an `API KEY` to login or register with a name

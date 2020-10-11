@@ -2,9 +2,10 @@ import React, { useContext } from "react";
 import { ModeContext } from "./../context/ModeContext";
 
 const AddTodoForm = (props) => {
-  const { mode, API_KEY, URL } = useContext(ModeContext);
+  const { mode, URL } = useContext(ModeContext);
   const modeClass = mode === "dark" ? "bg-dark text-white" : "";
-  const { setTodos, setFilter } = props;
+  const { setTodos, setFilter, api_key } = props;
+  
   const handleFormSubmit = (event) => {
     event.preventDefault();
     const newTodoText = event.target.elements.todo.value;
@@ -12,17 +13,18 @@ const AddTodoForm = (props) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        authorization: API_KEY,
+        authorization: api_key,
       },
       body: JSON.stringify({ task: newTodoText }),
     })
-      .then((response) => {
-        console.log(response);
+    .then((response) => {
+      console.log("objet headers : ", response);
+      if (response.ok) {
         return response.json();
-      })
+      }
+      throw new Error("HTTP request problem");
+    })
       .then((data) => {
-        console.log(data);
-        console.log(data.valid);
         if (data.valid) {
           console.log(data.data);
           setTodos(data.data);
@@ -43,7 +45,7 @@ const AddTodoForm = (props) => {
         </label>
         <input className={`form-control ${modeClass}`} id="todo" required />
       </div>
-      <button type="submit" className="btn btn-primary">
+      <button type="submit" className="btn btn-primary mb-5">
         allons-y !
       </button>
     </form>

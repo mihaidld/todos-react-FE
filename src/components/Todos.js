@@ -1,56 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import TodosList from "./TodosList";
 import SelectTodos from "./SelectTodos";
 import AddTodoForm from "./AddTodoForm";
+import { ModeContext } from "./../context/ModeContext";
 
-const initialTodos = [
-  {
-    task: "Faires des courses",
-    done: true,
-    id: 1,
-  },
-  {
-    task: "Réviser ES6 classes",
-    done: false,
-    id: 2,
-  },
-  {
-    task: "Aroser les plantes",
-    done: false,
-    id: 3,
-  },
-];
-
-const Todos = () => {
-  const [todos, setTodos] = useState(initialTodos);
+const Todos = (props) => {
+  const {api_key} = props
+  const [todos, setTodos] = useState([]);
+  const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState("all");
+  const { URL } = useContext(ModeContext);
 
-  /* useEffect(() => {
-    const API_KEY = "202c3b60-0977-11eb-8cd1-f3248197ab0d";
-    const IP = "172.18.246.84";
-    const PORT = 7777;
-    const URL = `http://${IP}:${PORT}`;
-    fetch(`${URL}/filter/${filter}`, {
+  useEffect(() => { 
+    fetch(`${URL}/list`, {
       method: "GET",
       headers: {
-        authorization: API_KEY,
+        authorization: api_key,
       },
     })
       .then((response) => {
         console.log("objet headers : ", response);
         if (response.ok) {
-          return response.data.json();
+          return response.json();
         }
         throw new Error("HTTP request problem");
       })
       .then((data) => {
         console.log("body format JSON : ", data);
-        setTodos(data);
+        setTodos(data.data);
+        setLoading(false)
       })
       .catch((error) => {
         alert(error.message);
       });
-  }, [filter, todos]); */
+    }, [URL, api_key]);
 
   useEffect(() => {
     document.title = todos.length
@@ -71,12 +54,16 @@ const Todos = () => {
 
   return (
     <main>
+      {loading && <p>Loading ...</p>}
+      {!loading && (
+        <>
       <h2 className="mb-3">
         Ma liste de tâches ({completedCount} / {todos.length})
       </h2>
       <SelectTodos filter={filter} setFilter={setFilter} />
-      <TodosList todos={filteredTodos} setTodos={setTodos} />
-      <AddTodoForm setFilter={setFilter} setTodos={setTodos} />
+      <TodosList todos={filteredTodos} setTodos={setTodos} api_key={api_key} />
+      <AddTodoForm setFilter={setFilter} setTodos={setTodos} api_key={api_key}/>
+      </>)}
     </main>
   );
 };

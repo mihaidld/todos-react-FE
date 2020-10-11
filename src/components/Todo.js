@@ -2,18 +2,19 @@ import React, { useContext } from "react";
 import { ModeContext } from "./../context/ModeContext";
 
 const Todo = (props) => {
-  const { todo, setTodos } = props;
-  const { API_KEY, URL } = useContext(ModeContext);
+  const { todo, setTodos, api_key } = props;
+  const { URL } = useContext(ModeContext);
   const style = {
     textDecoration: todo.done ? "line-through" : "none",
   };
   const idTodo = todo.id;
+
   const setUndoneTodo = (idTodo) => {
     fetch(`${URL}/undone/${idTodo}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        authorization: API_KEY,
+        authorization: api_key,
       },
     })
       .then((response) => {
@@ -32,12 +33,13 @@ const Todo = (props) => {
       })
       .catch((error) => console.log(error));
   };
+
   const setDoneTodo = (idTodo) => {
     fetch(`${URL}/done/${idTodo}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        authorization: API_KEY,
+        authorization: api_key,
       },
     })
       .then((response) => {
@@ -56,12 +58,13 @@ const Todo = (props) => {
       })
       .catch((error) => console.log(error));
   };
+  
   const deleteTodo = (idTodo) => {
     fetch(`${URL}/delete/${idTodo}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        authorization: API_KEY,
+        authorization: api_key,
       },
     })
       .then((response) => {
